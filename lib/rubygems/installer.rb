@@ -993,7 +993,7 @@ TEXT
   end
 
   def load_relative_enabled?
-    rb_config["LIBRUBY_RELATIVE"] == "yes"
+    rb_config["LIBRUBY_RELATIVE"] == "yes" || RUBY_PLATFORM.include?("mswin")
   end
 
   def bash_prolog_script
