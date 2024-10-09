@@ -79,15 +79,16 @@ module Bundler
       # This may be a feature end users request at some point, but maybe by that
       # time, we have builtin tools to do. So for now, we use an undocumented
       # ENV variable only for our specs.
+      require "shellwords"
       bundler_spec_original_cmd = ENV["BUNDLER_SPEC_ORIGINAL_CMD"]
       if bundler_spec_original_cmd
-        require "shellwords"
         cmd = [*Shellwords.shellsplit(bundler_spec_original_cmd), *ARGV]
       else
         cmd = [$PROGRAM_NAME, *ARGV]
         cmd.unshift(Gem.ruby) unless File.executable?($PROGRAM_NAME) || $PROGRAM_NAME.end_with?(".bat")
       end
 
+      Bundler.ui.warn "Restarting with `#{cmd.shelljoin}`"
       Bundler.with_original_env do
         Kernel.exec(
           { "GEM_HOME" => configured_gem_home, "GEM_PATH" => configured_gem_path, "BUNDLER_VERSION" => version.to_s },
